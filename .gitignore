@@ -1,3 +1,4 @@
+*.swp
 drops.txt
 __pycache__/
 bips.txt
