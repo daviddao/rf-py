@@ -4,14 +4,17 @@ import time
 def main():
   
   # Read the bips file from RAxML
-  [trees,mxtips,n_tree] = read_bips("bips.txt")
+  # For test purpose, we only read 500 trees
+  [trees,mxtips,n_tree] = read_bips("bips.txt",501)
   
   start = time.time()
   # store all dropsets in a file called sets  
   f = open("drops.txt","w")
   
   # Iterate through all trees
-  for i in trees.keys():
+  # For test purposes, we iterate through 5 trees
+  # for i in trees.keys():
+  for i in range(495,501):
     print("calculating dropset for tree",i)
     # Extract the bips
     s_bips = trees[i]['s_bips']
