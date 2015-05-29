@@ -10,7 +10,11 @@ def main():
   start = time.time()
   # store all dropsets in a file called sets  
   f = open("drops.txt","w")
-  
+ 
+  # create datastructure to store dropsets 
+  # hashkey will be dropsets string signature
+  drops = {}
+ 
   # Iterate through all trees
   # For test purposes, we iterate through 5 trees
   # for i in trees.keys():
@@ -42,12 +46,32 @@ def main():
         f.write(str(i) + " " + str(s_id) + " " + str(ind_id) + "\n")
         f.write(str(drop) + "\n")
         
+        # save dropsets into dictonary dropsets
+        key = str(drop)
+        if key in drops:
+          drops[key]['matching'] = np.vstack([drops[key]['matching'],[i,s_id,ind_id]])
+        else:
+          drops[key] = {}
+          drops[key]['matching'] = np.asarray([i,s_id,ind_id])
+        
+        
                 
          
   print("Ok, everything's fine")
   f.close()
   end = time.time()
   print("Total time needed:",end-start)
+
+
+'''
+http://stackoverflow.com/a/8567929/4490576
+'''
+def unique_rows(a):
+    a = np.ascontiguousarray(a)
+    unique_a = np.unique(a.view([('', a.dtype)]*a.shape[1]))
+    return unique_a.view(a.dtype).reshape((unique_a.shape[0], a.shape[1]))
+
+
 '''
 Function calculating dropset of two bipartitions in bitvector format
 '''
@@ -68,8 +92,13 @@ def calculateDropSet(ind_bip,s_bip):
   else:
     drop = c | d
   
-  # now get the indices of bits set to 1 as a list
-  indices = np.argwhere(drop == np.amax(drop)).flatten()
+  # if both bitvectors are already matching, return -1
+  if (drop.count() == 0):
+    indices = -1
+    print("already matching!")
+  else: 
+    # now get the indices of bits set to 1 as a list
+    indices = np.argwhere(drop == np.amax(drop)).flatten()
 
   return indices
   
