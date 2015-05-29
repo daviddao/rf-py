@@ -1,11 +1,11 @@
-from numbapro import autojit
+from numbapro import vectorize
 from parse import *
 import time
 
 def main():
   
   # Read the bips file from RAxML
-  [trees,mxtips,n_tree] = read_bips("bips.txt")
+  [trees,mxtips,n_tree] = read_bips("bips.txt",1)
   
   start = time.time()
   # store all dropsets in a file called sets  
@@ -27,7 +27,6 @@ def main():
   print("Total time needed:",end-start)
 
 
-@autojit(target="gpu")
 def extractTreeDrops(s_bips, ind_bips):
   count = 0 
   maxcount = len(s_bips) * len(ind_bips)
@@ -51,11 +50,11 @@ def extractTreeDrops(s_bips, ind_bips):
         # f.write(str(i) + " " + str(s_id) + " " + str(ind_id) + "\n")
         # f.write(str(drop) + "\n")
 
-        
 
 '''
 Function calculating dropset of two bipartitions in bitvector format
 '''
+@vectorize(['float32(float32, float32)'], target="gpu")
 def calculateDropSet(ind_bip,s_bip):
 
   # calculate the dropsets
