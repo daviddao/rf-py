@@ -25,6 +25,12 @@ class Dropset:
 	def add_s_bip(self,tree_id, s_bip_id):
 		np.append(self.s_bips,[[tree_id, s_bip_id]],axis=0)
 
+	def get_dropset(self):
+		return self.dropset
+
+	def get_s_bips(self):
+		return self.s_bips
+
 # keeps track of taxon
 class Taxon:
 

@@ -16,7 +16,7 @@ start_tree - index of tree from which we should start extracting bips
 end_tree - index of tree till which we extract bips (start_tree < end_tree!)
 
 '''
-def calculate_drops(save,start_tree,end_tree):
+def calculate_drops(save,start_tree,end_tree,file):
 
   # count all dropsets
   drops_count = 0
@@ -26,7 +26,7 @@ def calculate_drops(save,start_tree,end_tree):
   save_in_file = save
 
   # Read the bips file from RAxML (second argument: number of trees)
-  [trees,mxtips,n_tree] = read_bips("bips.txt",end_tree)
+  [trees,mxtips,n_tree] = read_bips(file,end_tree)
   
   start = time.time()
   # store all dropsets in a file called sets
@@ -101,8 +101,11 @@ def calculate_drops(save,start_tree,end_tree):
   print("Extracted",drops_count,"from",comparisons_count,"comparisons")
 
   # Check size of drops
-  for i,drop_e in enumerate(dropsets_dict):
-    print(i,len(drop))
+  for i, key in enumerate(dropsets_dict):
+    drop_e = dropsets_dict[key]
+    e = drop_e.get_dropset()
+    print(i,len(e))
+    print(e)
 
 '''
 Function calculating dropset of two bipartitions in bitvector format
@@ -119,8 +122,8 @@ def get_drops(ind_bip,s_bip):
   # choose the dropset representation with smaller bits set
   _ab = a.count() + b.count()
   _cd = c.count() + d.count()
-      
-  if (_ab > _cd):
+
+  if (_ab < _cd):
     drop = a | b
   else:
     drop = c | d
@@ -134,4 +137,4 @@ def get_drops(ind_bip,s_bip):
 
 
 # Main function call
-calculate_drops(False,500,501)
+calculate_drops(False,0,3,"ind_bips.txt")

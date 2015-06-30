@@ -1,0 +1,38 @@
+MASK_LENGTH 32
+SMALL_TREES 3
+LARGE_TREE 8
+Tree
+0 5 2
+s_bip_start
+24 
+6 
+s_bip_end
+8 1 2 5 6 
+ind_bip_start
+6 
+24 
+ind_bip_end
+Tree
+1 5 2
+s_bip_start
+24 
+6 
+s_bip_end
+4 7 8 1 5 
+ind_bip_start
+6 
+22 
+ind_bip_end
+Tree
+2 6 3
+s_bip_start
+24 
+6 
+30 
+s_bip_end
+5 4 8 1 2 3 
+ind_bip_start
+24 
+58 
+34 
+ind_bip_end
