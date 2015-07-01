@@ -123,7 +123,6 @@ def calculate_drops(save,start_tree,end_tree,file):
 
 '''
 Function calculating dropset of two bipartitions in bitvector format
-BUG: same dropset length all the time?
 '''
 def get_drops(ind_bip,s_bip):
 
