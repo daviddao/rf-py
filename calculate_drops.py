@@ -68,23 +68,29 @@ def calculate_drops(save,start_tree,end_tree,file):
         assert(ind_bip[0] == False)
         count = count + 1
         print("looking at",count,"/",maxcount)
-        # calculate dropsets
+        # calculate dropsets and get the indices
         indices = get_drops(ind_bip,s_bip)
-        # get the global representation of the dropset       
-        drop = [s_treeList[i] for i in indices]
-        # sort the dropset for unique representation
-        drop = sorted(drop)
 
-        key = str(drop)
-
-        # save dropset and its s_bip
-        if (key in dropsets_dict):
-          drop_e = dropsets_dict[key]
-          drop_e.add_s_bip(i,s_id)
+        # raised flag, we deal with a matching bipartition
+        if (indices[0] == -1):
+          s_bip_el.set_matching(True)
         else:
-          drops_count = drops_count + 1
-          drop_e = Dropset(drop,i,s_id)
-          dropsets_dict[key] = drop_e
+        # get the global representation of the dropset       
+          drop = [s_treeList[i] for i in indices]
+          # sort the dropset for unique key
+          drop = sorted(drop)
+          key = str(drop)
+
+          # if dropset already exists then get it
+          if (key in dropsets_dict):
+            drop_e = dropsets_dict[key]
+            drop_e.add_s_bip(i,s_id)
+          # otherwise create a new dropset
+          else:
+            # this is only for checking
+            drops_count = drops_count + 1
+            drop_e = Dropset(drop,i,s_id)
+            dropsets_dict[key] = drop_e
 
         if (save_in_file):
         	# save tree index and s_bip, ind_bip index
@@ -100,11 +106,19 @@ def calculate_drops(save,start_tree,end_tree,file):
   print("Total time needed:",end-start)
   print("Extracted",drops_count,"from",comparisons_count,"comparisons")
 
+  ## TEST SETS ##
+
   # Check size of drops
-  for i, key in enumerate(dropsets_dict):
-    drop_e = dropsets_dict[key]
-    e = drop_e.get_dropset()
-    print(i,len(e))
+  # for i, key in enumerate(dropsets_dict):
+  #   drop_e = dropsets_dict[key]
+  #   e = drop_e.get_dropset()
+  #   print(e)
+
+  _dict = trees[0]['s_bips_dict']
+  for i, key in enumerate(_dict):
+    bip_e = _dict[key]
+    e = bip_e.get_matching()
+    bit = bip_e.get_bitarray()
     print(e)
 
 '''
@@ -128,8 +142,12 @@ def get_drops(ind_bip,s_bip):
   else:
     drop = c | d
   
-  # now get the indices of bits set to 1 as a list
-  indices = np.argwhere(drop == np.amax(drop)).flatten()
+  # raise flag that we have to deal with a matching dropset
+  if (drop.count() == 0):
+    indices = [-1]
+  else:
+    # now get the indices of bits set to 1 as a list
+    indices = np.argwhere(drop == np.amax(drop)).flatten()
 
   return indices
 
