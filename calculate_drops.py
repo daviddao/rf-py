@@ -85,8 +85,8 @@ def calculate_drops(save,start_tree,end_tree,file):
       taxa_list[taxon_id].add_tree(i)
 
     # Dictionary to detect multiple bips
-    trees[i]['s_bips_dict'] = {}
-    s_bips_dict = trees[i]['s_bips_dict']
+    #trees[i]['s_bips_dict'] = {}
+    #s_bips_dict = trees[i]['s_bips_dict']
 
     # global_to_local maps global to local ids
     trees[i]['global_to_local'] = {}
@@ -94,7 +94,10 @@ def calculate_drops(save,start_tree,end_tree,file):
     for local_index, global_index in enumerate(s_treeList):
       g2l_mapping[global_index] = local_index
 
-
+    # TODO create a Tree object which will replace s_bips_dict !
+    trees[i]["Tree"] = Tree(i,g2l_mapping,s_treeList)
+    tree = trees[i]["Tree"]
+    s_bips_dict = tree.get_bips()
 
 
     count = 0 

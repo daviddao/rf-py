@@ -15,21 +15,20 @@ def tests(dropset_dict, trees, taxa_list):
   #     print("matching",bip_e.get_matching())
 
   # Check taxa_list
-  for idx,taxon in enumerate(taxa_list):
-    #print(taxon.get_trees())
-    print(idx)
-    print(taxon.get_trees())
+  # for idx,taxon in enumerate(taxa_list):
+  #   print(taxon.get_trees())
+  #   print(idx)
+  #   print(taxon.get_trees())
     #dropsets = taxon.get_dropsets()
     # for drops in dropsets:
     #   print(drops.get_dropset())
 
-  # Check for local_to_global mapping
-  #for tree in trees:
-  #  print(tree['local_to_global'])
 
-  # Check for global_to_local mapping
-  #for tree in trees:
-  #  print(tree['global_to_local'])
+  # Check for local_to_global mapping
+  for tree in trees:
+    print(tree['Tree'].get_global_to_local())
+    print(tree['Tree'].get_local_to_global())
+    print(tree['Tree'].delete_taxa([1,3]))
 
   # _dict = trees[10002]['s_bips_dict']
   # for i, key in enumerate(_dict):
