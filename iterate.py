@@ -15,16 +15,21 @@ def tests(dropset_dict, trees, taxa_list):
   #     print("matching",bip_e.get_matching())
 
   # Check taxa_list
-  # for idx,taxon in enumerate(taxa_list):
-  #   #print(taxon.get_trees())
-  #   print(idx)
-  #   dropsets = taxon.get_dropsets()
-  #   for drops in dropsets:
-  #     print(drops.get_dropset())
+  for idx,taxon in enumerate(taxa_list):
+    #print(taxon.get_trees())
+    print(idx)
+    print(taxon.get_trees())
+    #dropsets = taxon.get_dropsets()
+    # for drops in dropsets:
+    #   print(drops.get_dropset())
 
-  # Check for s_treeList
+  # Check for local_to_global mapping
   #for tree in trees:
-  #  print(tree['sTreeList'])
+  #  print(tree['local_to_global'])
+
+  # Check for global_to_local mapping
+  #for tree in trees:
+  #  print(tree['global_to_local'])
 
   # _dict = trees[10002]['s_bips_dict']
   # for i, key in enumerate(_dict):
@@ -47,14 +52,14 @@ def rf_optimize(start_tree,end_tree,file,save=False):
 
   # One iteration
   for key,drops in d_dict.items():
-    drops.calculate_score(taxa)
+    drops.calculate_score(trees,taxa)
 
   end = time.time()
   print("Total time needed:",end - start)
 
 
 
-  tests(d_dict,trees,taxa)
+  #tests(d_dict,trees,taxa)
 
 #rf_optimize(10000,10020,"bips.txt")
 #rf_optimize(100000,173431,"bips.txt")

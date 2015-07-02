@@ -65,7 +65,6 @@ def calculate_drops(save,start_tree,end_tree,file):
   dropsets_dict = {}
   # Array saving all taxon
   taxa_list = [Taxon(i) for i in range(mxtips + 1)]
-  print("mxtips",mxtips)
 
   # store all dropsets in a file called sets
   if (save_in_file):  
@@ -89,8 +88,12 @@ def calculate_drops(save,start_tree,end_tree,file):
     trees[i]['s_bips_dict'] = {}
     s_bips_dict = trees[i]['s_bips_dict']
 
-    # global_to_local to convert from global to local ids
-    trees[i]['global_to_local'] = np.asarray([None]*mxtips)
+    # global_to_local maps global to local ids
+    trees[i]['global_to_local'] = {}
+    g2l_mapping = trees[i]['global_to_local']
+    for local_index, global_index in enumerate(s_treeList):
+      g2l_mapping[global_index] = local_index
+
 
 
 
@@ -114,7 +117,7 @@ def calculate_drops(save,start_tree,end_tree,file):
         # second sanity check
         assert(ind_bip[0] == False)
         count = count + 1
-        print("looking at",count,"/",maxcount)
+        # print("looking at",count,"/",maxcount)
         # calculate dropsets and get the indices
         indices = get_drops(ind_bip,s_bip)
 
