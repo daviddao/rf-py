@@ -13,7 +13,7 @@ s_bip_start
 ...
 [bip_n]
 s_bip_end
-[small tree list]
+[local_to_global id mapping]
 ind_bip_start
 [bip_1]
 ...
@@ -43,7 +43,8 @@ def read_bips(file, treeIter=0):
     s_trees_count = treeIter 
   
   # Create a dict to store the bips of each small tree 
-  trees = dict.fromkeys(range(s_trees_count))
+  #trees = dict.fromkeys(range(s_trees_count))
+  trees = [None] * s_trees_count # Use array instead of dict for slicing, TODO: Speed issues?
   
   for i in range(s_trees_count):
     print("loading tree",i)
@@ -53,10 +54,10 @@ def read_bips(file, treeIter=0):
     [idx,species,splits] = list(map(int,f.readline().split()))
     
     # Creating dictonary within dictonary for each tree containing induced bips, small bips and treeList
-    trees[i] = dict.fromkeys(["ind_bips","s_bips","sTreeList"])
+    trees[i] = dict.fromkeys(["ind_bips","s_bips","local_to_global"])
     trees[i]['s_bips'] = np.empty(splits,dtype=object)
     trees[i]['ind_bips'] = np.empty(species - 3,dtype=object)    
-    trees[i]['sTreeList'] = np.empty(species)    
+    trees[i]['local_to_global'] = np.empty(species)
   
     assert(f.readline().split()[0] == "s_bip_start")
     # Get the next line
@@ -85,7 +86,7 @@ def read_bips(file, treeIter=0):
     assert(count == splits)
     
     # Get the smallTreeList
-    trees[i]['sTreeList'] = list(map(int,f.readline().split()))
+    trees[i]['local_to_global'] = list(map(int,f.readline().split()))
     
     assert(f.readline().split()[0] == "ind_bip_start")
     next_line = f.readline().split()

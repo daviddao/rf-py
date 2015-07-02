@@ -1,5 +1,4 @@
 from parse import *
-import time
 # Import Dropset Datastructure
 from datastructs import *
 import numpy as np
@@ -42,6 +41,7 @@ Parameters:
 save - bool, determines if the dropsets are saved in a file called drops.txt
 start_tree - index of tree from which we should start extracting bips
 end_tree - index of tree till which we extract bips (start_tree < end_tree!)
+file - which file should be loaded
 
 returns
 
@@ -60,10 +60,8 @@ def calculate_drops(save,start_tree,end_tree,file):
 
   # Read the bips file from RAxML (second argument: number of trees)
   [trees,mxtips,n_tree] = read_bips(file,end_tree)
-  
-  start = time.time()
 
-   # Dictionary saving all dropsets
+  # Dictionary saving all dropsets
   dropsets_dict = {}
   # Array saving all taxon
   taxa_list = [Taxon(i) for i in range(mxtips + 1)]
@@ -81,15 +79,20 @@ def calculate_drops(save,start_tree,end_tree,file):
     # Extract the bips
     s_bips = trees[i]['s_bips']
     ind_bips = trees[i]['ind_bips'] 
-    s_treeList = trees[i]['sTreeList']
+    s_treeList = trees[i]['local_to_global']
 
     # Save information into Taxon for faster retrieval
     for taxon_id in s_treeList:
       taxa_list[taxon_id].add_tree(i)
 
-    # Dictonary to detect multiple bips
+    # Dictionary to detect multiple bips
     trees[i]['s_bips_dict'] = {}
     s_bips_dict = trees[i]['s_bips_dict']
+
+    # global_to_local to convert from global to local ids
+    trees[i]['global_to_local'] = np.asarray([None]*mxtips)
+
+
 
     count = 0 
     maxcount = len(s_bips) * len(ind_bips)
@@ -132,8 +135,7 @@ def calculate_drops(save,start_tree,end_tree,file):
             drop_e.add_s_bip(s_bip_el)
           # otherwise create a new dropset
           else:
-            # this is only for checking
-            drops_count = drops_count + 1
+            drops_count = drops_count + 1 # one more unique dropset
             drop_e = Dropset(drop,s_bip_el)
             dropsets_dict[key] = drop_e
 
@@ -150,8 +152,6 @@ def calculate_drops(save,start_tree,end_tree,file):
   print("Ok, everything's fine")
   if (save_in_file):
   	f.close()
-  end = time.time()
-  print("Total time needed:",end - start)
   print("Extracted",drops_count,"unique dropsets from",comparisons_count,"comparisons")
 
   return dropsets_dict, trees, taxa_list

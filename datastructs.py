@@ -32,6 +32,8 @@ class Dropset:
 	def __init__(self, dropset, bip):
 		self.dropset = dropset
 		self.s_bips = [bip]
+		# Each Dropset has a score 
+		self.score = 0
 
 	# Add a new s_bip into an array containing bipartition objects
 	def add_s_bip(self,bip):
@@ -42,6 +44,29 @@ class Dropset:
 
 	def get_s_bips(self):
 		return self.s_bips
+
+	def get_score(self):
+		return self.score
+
+	def calculate_score(self,taxa_list):
+		# positive score calculated by number of bips in s_bips who were not matching before
+		_pos_score = 0
+		# negative score calculated by all bips which are destroyed and were matching before
+		_neg_score = 0
+
+		for _bips in self.s_bips:
+			_matching = _bips.get_matching()
+
+			# if it wasn't matching before
+			if(_matching == False):
+				_pos_score = _pos_score + 1
+
+		# iterate through all taxa in dropset and predict negative score
+		for _el in self.dropset:
+			taxon = taxa_list[_el]
+
+
+
 
 # keeps track of which tree, bipartition and co has the taxon
 class Taxon:
