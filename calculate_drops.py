@@ -140,6 +140,7 @@ def calculate_drops(save, start_tree, end_tree, file):
                     if key in dropsets_dict:
                         drop_e = dropsets_dict[key]
                         drop_e.add_s_bip(s_bip_el)
+
                     # otherwise create a new dropset
                     else:
                         drops_count += 1  # one more unique dropset
@@ -148,7 +149,9 @@ def calculate_drops(save, start_tree, end_tree, file):
 
                     # Store the dropset into taxon for easier searching
                     for taxon_id in drop:
-                        taxa_list[taxon_id].add_dropset(drop_e)
+                        # Take care not to store duplicates
+                        if drop_e not in taxa_list[taxon_id].get_dropsets():
+                            taxa_list[taxon_id].add_dropset(drop_e)
 
                 if save_in_file:
                     # save tree index and s_bip, ind_bip index

@@ -92,6 +92,7 @@ class Tree:
         # check if we have to generate a new representation, new representation is stored in tmp_bitarray
         self.generate_new_representation(indices, tmp_delete)
 
+        # use to detect duplicates and mergings in bipartitions
         tmp_dict = {}
 
         bips_dict = self.get_bips()

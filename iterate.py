@@ -1,3 +1,4 @@
+import collections
 from calculate_drops import *
 import time
 
@@ -50,15 +51,17 @@ def rf_optimize(start_tree, end_tree, file, save=False):
     mx_score = 0
 
 
-    # One iteration TODO: scores alternate!
-    for key, drops in d_dict.items():
+    # One iteration TODO: scores alternate! Especially when it is after another dropset!
+    od = collections.OrderedDict(sorted(d_dict.items()))
+    for key, drops in od.items():
+        drops.calculate_full_sbips(d_dict)
         [drop, score] = drops.calculate_score(trees, taxa)
         print(drop, ":", score)
 
-    # this will never alternate
+
+    # d_dict["[3, 4]"].calculate_full_sbips(d_dict)
     # drop, score = d_dict["[4]"].calculate_score(trees, taxa)
     # print(drop, ":", score)
-    # d_dict["[4, 5]"].calculate_score(trees, taxa)
 
     # for i,tree in enumerate(trees):
     # tree_o = tree['Tree']

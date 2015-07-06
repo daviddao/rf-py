@@ -54,6 +54,9 @@ class Bipartition:
 
     def delete_and_check(self, tmp_deleted):
 
+        # Reset old settings
+        self.tmp_destroyed = False
+
         # Do we actually need to check this bipartition?
         if self.destroyed:
             return "Error, this should have been removed!"
