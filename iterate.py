@@ -44,14 +44,15 @@ def rf_optimize(start_tree, end_tree, file, save=False):
     start = time.time()
     # Preprocessing
     d_dict, trees, taxa = calculate_drops(save, start_tree, end_tree, file)
+
     # Select only some tree
-    trees = trees[start_tree:end_tree]
+    # trees = trees[start_tree:end_tree]
 
     # We take only positive scores
     mx_score = 0
 
 
-    # One iteration TODO: scores alternate! Especially when it is after another dropset!
+    # One iteration
     od = collections.OrderedDict(sorted(d_dict.items()))
     for key, drops in od.items():
         drops.calculate_full_sbips(d_dict)
@@ -77,6 +78,7 @@ def rf_optimize(start_tree, end_tree, file, save=False):
 
     # tests(d_dict,trees,taxa)
 
-# rf_optimize(10000,10020,"bips.txt")
+
+rf_optimize(10000, 10020, "bips.txt")
 # rf_optimize(100000,173431,"bips.txt")
-rf_optimize(0, 3, "ind_bips.txt")
+# rf_optimize(0, 3, "ind_bips.txt")

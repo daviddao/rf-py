@@ -38,9 +38,6 @@ class Dropset:
 
     def calculate_score(self, trees, taxa_list):
 
-        check4 = [4]
-        if check4 == self.get_dropset():
-            pass
         # positive score calculated by number of bips in s_bips who were not matching before
         pos_score = 0
         # negative score calculated by all bips which are destroyed and were matching before
@@ -60,13 +57,11 @@ class Dropset:
             # is it is going to be destroyed?
             _destroyed = _bips.get_tmp_destroyed()
 
-            # if it wasn't matching before
-            if not _matching:
-                if not _destroyed:
-                    pos_score += 1
-
-        if self.get_dropset() == check4:
-            print("pos_score", pos_score, "neg_score", neg_score)
+            # if it is not destroyed
+            if not _destroyed:
+                # somehow commenting this yields same results as first algorithm in C
+                # if not _matching:
+                pos_score += 1
 
         score = pos_score - neg_score
 
