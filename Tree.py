@@ -1,3 +1,4 @@
+__author__ = 'David'
 from bitarray import *
 
 
@@ -32,9 +33,8 @@ class Tree:
         self.first = i
 
     '''
-	returns deleted taxa without affecting the tree valid_bits array directly
-	'''
-
+    returns deleted taxa without affecting the tree valid_bits array directly
+    '''
     def delete_taxa(self, indices):
 
         self.tmp_delete = self.valid_bits.copy()
@@ -46,13 +46,11 @@ class Tree:
         return tmp_delete
 
     '''
-	if delete first, we use a new index to generate a new bitarray representation
-	'''
-
+    if delete first, we use a new index to generate a new bitarray representation
+    '''
     def generate_new_representation(self, indices, tmp_delete):
 
-        # TODO: if we delete the first element, we need to re-adjust the representation
-        if (self.first in indices):
+        if self.first in indices:
             # get the index of the first bit set to 1
             new_first = tmp_delete.index(True)
         else:
@@ -66,22 +64,20 @@ class Tree:
             new_bitarray = bip.get_bitarray()
 
             # ok, standard representation needed, we invert everything
-            if (new_bitarray[new_first] == 1):
+            if new_bitarray[new_first] == 1:
                 new_bitarray = ~new_bitarray
 
             # now it is setted for all!
             bip.set_tmp_bitarray(new_bitarray)
 
-
     '''
-	1. convert the global deleted indices into local indices
-	2. create a new valid_bits bitarray
-	3. each bip of the tree checks for itself if it is destroyed
-	4. rehash to see if existing, matching ones are going to be merged
+    1. convert the global deleted indices into local indices
+    2. create a new valid_bits bitarray
+    3. each bip of the tree checks for itself if it is destroyed
+    4. rehash to see if existing, matching ones are going to be merged
 
-	return a penalty score (# destroyed matching bips)
-	'''
-
+    return a penalty score (# destroyed matching bips)
+    '''
     def get_penalty(self, g_indices):
 
         # first convert them to fit our tree
@@ -107,8 +103,8 @@ class Tree:
                 penalty += 1
 
             # rehash the existing ones and look if they already exist and was matching
-            if (predict_destroyed == False):
-                if ((new_key in tmp_dict) and bip.get_matching()):
+            if not predict_destroyed:
+                if (new_key in tmp_dict) and bip.get_matching():
                     penalty += 1
                 else:
                     tmp_dict[new_key] = bip
@@ -124,6 +120,7 @@ class Bipartition:
         # used for calculations if the first index is deleted
         self.tmp_bitarray = bitarray
         self.destroyed = False
+        self.tmp_destroyed = False
         self.matching = False
         # the default representation for all bitarrays is always bitvector[0] = 0
         self.first = 0
@@ -153,21 +150,22 @@ class Bipartition:
     def get_tmp_bitarray(self):
         return self.tmp_bitarray.copy()
 
+    def get_tmp_destroyed(self):
+        return self.tmp_destroyed
+
     def set_tmp_bitarray(self, tmp_bitarray):
         self.tmp_bitarray = tmp_bitarray
 
-
     '''
-	Give a deleted_list and test if the bipartition is getting destroyed
-	returns:
-	True/False - if the bip gets destroyed
-	key - the standard representation after deletion
-	'''
-
+    Give a deleted_list and test if the bipartition is getting destroyed
+    returns:
+    True/False - if the bip gets destroyed
+    key - the standard representation after deletion
+    '''
     def delete_and_check(self, tmp_deleted):
 
         # Do we actually need to check this bipartition?
-        if self.destroyed == True:
+        if self.destroyed:
             return "Error, this should have been removed!"
 
         tmp_bitarray = self.get_tmp_bitarray()
@@ -176,91 +174,7 @@ class Bipartition:
         right_side = ~tmp_bitarray & tmp_deleted
 
         # by removing, we destroyed the bipartition
-        if ((left_side.count() < 2) or (right_side.count() < 2)):
+        if (left_side.count() < 2) or (right_side.count() < 2):
             return True, left_side.to01()
 
         return False, left_side.to01()
-
-
-class Dropset:
-    def __init__(self, dropset, bip):
-        self.dropset = dropset
-        self.s_bips = [bip]
-        # Each Dropset has a score
-        self.score = 0
-
-    # Add a new s_bip into an array containing bipartition objects
-    def add_s_bip(self, bip):
-        self.s_bips.append(bip)
-
-    def get_dropset(self):
-        return self.dropset
-
-    def get_s_bips(self):
-        return self.s_bips
-
-    def get_score(self):
-        return self.score
-
-    def get_indices_per_tree(self, taxa_list):
-        indices = {}
-        # go through all ids in our dropset
-        for global_id in self.dropset:
-            taxon = taxa_list[global_id]
-            tree_ids = taxon.get_trees()
-
-            for tree_id in tree_ids:
-                if tree_id in indices:
-                    indices[tree_id].append(global_id)
-                else:
-                    indices[tree_id] = [global_id]
-
-        return indices
-
-
-    def calculate_score(self, trees, taxa_list):
-        # positive score calculated by number of bips in s_bips who were not matching before
-        pos_score = 0
-        # negative score calculated by all bips which are destroyed and were matching before
-        neg_score = 0
-
-        for _bips in self.s_bips:
-            _matching = _bips.get_matching()
-
-            # if it wasn't matching before
-            if not _matching:
-                pos_score = pos_score + 1
-
-        indices_per_tree = self.get_indices_per_tree(taxa_list)
-
-        # for each tree ...
-        for tree_id, indices in indices_per_tree.items():
-            c_tree = trees[tree_id]["Tree"]
-
-            neg_score = neg_score + c_tree.get_penalty(indices)
-
-        print(self.get_dropset(), ":", pos_score - neg_score)
-
-
-# keeps track of which tree, bipartition and co has the taxon
-class Taxon:
-    def __init__(self, globalId):
-        self.trees = []
-        self.dropsets = []
-        self.globalId = globalId
-
-    def add_tree(self, idx):
-        self.trees.append(idx)
-
-    def add_dropset(self, dropset):
-        self.dropsets.append(dropset)
-
-    def get_dropsets(self):
-        return self.dropsets
-
-    def get_trees(self):
-        return self.trees
-
-
-
-

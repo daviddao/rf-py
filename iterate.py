@@ -1,7 +1,8 @@
 from calculate_drops import *
 import time
 
-## TEST SETS ##
+
+# TEST SETS
 def tests(dropset_dict, trees, taxa_list):
     pass
     # Check size of drops
@@ -19,7 +20,7 @@ def tests(dropset_dict, trees, taxa_list):
     # print(taxon.get_trees())
     #   print(idx)
     #   print(taxon.get_trees())
-    #dropsets = taxon.get_dropsets()
+    # dropsets = taxon.get_dropsets()
     # for drops in dropsets:
     #   print(drops.get_dropset())
 
@@ -67,8 +68,8 @@ def rf_optimize(start_tree, end_tree, file, save=False):
 
 
 
-    #tests(d_dict,trees,taxa)
+    # tests(d_dict,trees,taxa)
 
 # rf_optimize(10000,10020,"bips.txt")
-#rf_optimize(100000,173431,"bips.txt")
+# rf_optimize(100000,173431,"bips.txt")
 rf_optimize(0, 3, "ind_bips.txt")

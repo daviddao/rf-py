@@ -1,5 +1,7 @@
 from parse import *
-from datastructs import *
+from Dropset import *
+from Tree import *
+from Taxon import *
 import numpy as np
 
 
@@ -95,7 +97,6 @@ def calculate_drops(save, start_tree, end_tree, file):
         for local_index, global_index in enumerate(s_treeList):
             g2l_mapping[global_index] = local_index
 
-        # TODO create a Tree object which will replace s_bips_dict !
         trees[i]["Tree"] = Tree(i, g2l_mapping, s_treeList)
         tree = trees[i]["Tree"]
         s_bips_dict = tree.get_bips()
