@@ -55,9 +55,16 @@ class Dropset:
             _matching = _bips.get_matching()
 
             # is it going to be destroyed?
-            _bips.get_tmp_destroyed()
+            _destroyed = _bips.get_tmp_destroyed()
+
             # if it wasn't matching before
             if not _matching:
-                pos_score += 1
+                if not _destroyed:
+                    pos_score += 1
 
-        print(self.get_dropset(), ":", pos_score - neg_score)
+        score = pos_score - neg_score
+        # print(self.get_dropset(), ":", score)
+
+        return self.get_dropset(), score
+
+

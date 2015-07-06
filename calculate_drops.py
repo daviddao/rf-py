@@ -2,6 +2,7 @@ from parse import *
 from Dropset import *
 from Tree import *
 from Taxon import *
+from Bipartition import *
 import numpy as np
 
 
@@ -117,7 +118,7 @@ def calculate_drops(save, start_tree, end_tree, file):
 
             # look at all possible combinations of ind_bip and s_bip and calculate the dropset
             for ind_id, ind_bip in enumerate(ind_bips):
-                # second sanity check
+                # second sanity check for standard representation
                 assert (ind_bip[0] == False)
                 count += 1
                 # print("looking at",count,"/",maxcount)

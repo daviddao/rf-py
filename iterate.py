@@ -49,18 +49,22 @@ def rf_optimize(start_tree, end_tree, file, save=False):
     # We take only positive scores
     mx_score = 0
 
-    # One iteration
-    # for key,drops in d_dict.items():
-    # drops.calculate_score(trees,taxa)
 
-    d_dict["[4, 5]"].calculate_score(trees, taxa)
+    # One iteration TODO: scores alternate!
+    for key, drops in d_dict.items():
+        [drop, score] = drops.calculate_score(trees, taxa)
+        print(drop, ":", score)
+
+    # this will never alternate
+    # drop, score = d_dict["[4]"].calculate_score(trees, taxa)
+    # print(drop, ":", score)
+    # d_dict["[4, 5]"].calculate_score(trees, taxa)
 
     # for i,tree in enumerate(trees):
     # tree_o = tree['Tree']
     #   bips = [bip for bip in tree_o.get_bips()]
     #   print(i,bips)
     #   print(tree_o.tmp_delete)
-
 
 
     end = time.time()
