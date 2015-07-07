@@ -61,7 +61,7 @@ def rf_optimize(start_tree, end_tree, file, save=False):
         # print(drop, ":", score)
         count += 1
         print(count, "/", total)
-        f.write(score + ":" + str(drop) + "\n")
+        f.write(str(score) + ":" + str(drop) + "\n")
     f.close()
 
     # d_dict["[3, 4]"].calculate_full_sbips(d_dict)
