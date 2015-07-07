@@ -89,13 +89,25 @@ class Tree:
         # pseudo delete
         tmp_delete = self.delete_taxa(indices)
 
+        bips_dict = self.get_bips()
+
+        # destroyed the whole tree
+        if tmp_delete.count() == 0:
+            # penalty is the sum of all matching bips in the tree
+            for key in bips_dict:
+                bip = bips_dict[key]
+
+                if bip.get_matching():
+                    penalty += 1
+
+            # exit the code here
+            return penalty
+
         # check if we have to generate a new representation, new representation is stored in tmp_bitarray
         self.generate_new_representation(indices, tmp_delete)
 
         # use to detect duplicates and mergings in bipartitions
         tmp_dict = {}
-
-        bips_dict = self.get_bips()
 
         for key in bips_dict:
             bip = bips_dict[key]
