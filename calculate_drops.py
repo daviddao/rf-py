@@ -164,7 +164,3 @@ def calculate_drops(save, start_tree, end_tree, file):
     print("Extracted", drops_count, "unique dropsets from", comparisons_count, "comparisons")
 
     return dropsets_dict, trees, taxa_list
-
-
-
-

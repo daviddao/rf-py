@@ -25,7 +25,6 @@ def tests(dropset_dict, trees, taxa_list):
     # for drops in dropsets:
     #   print(drops.get_dropset())
 
-
     # Check for local_to_global mapping
     for tree in trees:
         print(tree['Tree'].get_global_to_local())
@@ -49,16 +48,21 @@ def rf_optimize(start_tree, end_tree, file, save=False):
     # trees = trees[start_tree:end_tree]
 
     # We take only positive scores
-    mx_score = 0
+    # mx_score = 0
 
-
+    f = open("scoring.txt", "w")
     # One iteration
     od = collections.OrderedDict(sorted(d_dict.items()))
+    total = len(od)
+    count = 0
     for key, drops in od.items():
         drops.calculate_full_sbips(d_dict)
         [drop, score] = drops.calculate_score(trees, taxa)
-        print(drop, ":", score)
-
+        # print(drop, ":", score)
+        count += 1
+        print(count, "/", total)
+        f.write(score + ":" + str(drop) + "\n")
+    f.close()
 
     # d_dict["[3, 4]"].calculate_full_sbips(d_dict)
     # drop, score = d_dict["[4]"].calculate_score(trees, taxa)
@@ -70,11 +74,8 @@ def rf_optimize(start_tree, end_tree, file, save=False):
     #   print(i,bips)
     #   print(tree_o.tmp_delete)
 
-
     end = time.time()
     print("Total time needed:", end - start)
-
-
 
     # tests(d_dict,trees,taxa)
 

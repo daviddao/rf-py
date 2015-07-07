@@ -52,7 +52,7 @@ class Dropset:
             neg_score = neg_score + c_tree.get_penalty(indices)
 
         for _bips in self.s_bips:
-            _matching = _bips.get_matching()
+            # _matching = _bips.get_matching()
 
             # is it is going to be destroyed?
             _destroyed = _bips.get_tmp_destroyed()

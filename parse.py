@@ -37,7 +37,6 @@ def read_bips(file, treeIter=0):
     l_tree_species_line = f.readline().split()
     l_tree_species = int(l_tree_species_line[1])
 
-
     # Now iterate through all trees
     if treeIter != 0:
         print("selected", treeIter, "trees")
@@ -118,4 +117,4 @@ def read_bips(file, treeIter=0):
 
 # [trees,count,species] = read_bips("bips.txt")
 
-#print(trees[0]['s_bips'])
+# print(trees[0]['s_bips'])
