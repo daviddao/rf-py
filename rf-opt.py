@@ -80,6 +80,6 @@ def rf_optimize(start_tree, end_tree, file, save=False):
     # tests(d_dict,trees,taxa)
 
 
-rf_optimize(10000, 10020, "bips.txt")
-# rf_optimize(100000,173431,"bips.txt")
-# rf_optimize(0, 3, "ind_bips.txt")
+# rf_optimize(10000, 10020, "data/bips.txt")
+rf_optimize(100000, 173431, "data/bips.txt")
+# rf_optimize(0, 3, "data/ind_bips.txt")
