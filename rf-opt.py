@@ -3,49 +3,22 @@ from calculate_drops import *
 import time
 
 
-# TEST SETS
-def tests(dropset_dict, trees, taxa_list):
-    pass
-    # Check size of drops
-    # for i, key in enumerate(dropsets_dict):
-    # drop_e = dropsets_dict[key]
-    # print("Dropset",key)
-    #   e = drop_e.get_s_bips()
-    #   for bip_e in e:
-    #     # All information about the bipartition (tree_id, id, matching)
-    #     print(bip_e.get_idx())
-    #     print("matching",bip_e.get_matching())
+'''
+RF Opt function taking following arguments:
+- start_tree  : first tree to be considered
+- end_tree : last tree to be considered
+- file : path to the bips.txt, extracted by RAxML
+- save (optional) : saving dropsets into a file called drops.txt
 
-    # Check taxa_list
-    # for idx,taxon in enumerate(taxa_list):
-    # print(taxon.get_trees())
-    #   print(idx)
-    #   print(taxon.get_trees())
-    # dropsets = taxon.get_dropsets()
-    # for drops in dropsets:
-    #   print(drops.get_dropset())
-
-    # Check for local_to_global mapping
-    for tree in trees:
-        print(tree['Tree'].get_global_to_local())
-        print(tree['Tree'].get_local_to_global())
-        print(tree['Tree'].delete_taxa([1, 3]))
-
-        # _dict = trees[10002]['s_bips_dict']
-        # for i, key in enumerate(_dict):
-        # bip_e = _dict[key]
-        #   e = bip_e.get_matching()
-        #   bit = bip_e.get_bitarray()
-        #   print(e)
+returns:
+- scoring.txt : a scoring for all dropsets
+'''
 
 
 def rf_optimize(start_tree, end_tree, file, save=False):
     start = time.time()
     # Preprocessing
     d_dict, trees, taxa = calculate_drops(save, start_tree, end_tree, file)
-
-    # Select only some tree
-    # trees = trees[start_tree:end_tree]
 
     # We take only positive scores
     # mx_score = 0
@@ -64,20 +37,8 @@ def rf_optimize(start_tree, end_tree, file, save=False):
         f.write(str(score) + ":" + str(drop) + "\n")
     f.close()
 
-    # d_dict["[3, 4]"].calculate_full_sbips(d_dict)
-    # drop, score = d_dict["[4]"].calculate_score(trees, taxa)
-    # print(drop, ":", score)
-
-    # for i,tree in enumerate(trees):
-    # tree_o = tree['Tree']
-    #   bips = [bip for bip in tree_o.get_bips()]
-    #   print(i,bips)
-    #   print(tree_o.tmp_delete)
-
     end = time.time()
     print("Total time needed:", end - start)
-
-    # tests(d_dict,trees,taxa)
 
 
 # rf_optimize(10000, 10020, "data/bips.txt")
