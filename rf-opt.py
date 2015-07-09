@@ -50,7 +50,7 @@ def rf_optimize(start_tree, end_tree, file, save=False):
     # We take only positive scores
     # mx_score = 0
 
-    f = open("scoring.txt", "w")
+    f = open("reduced_scoring.txt", "w")
     # One iteration
     od = collections.OrderedDict(sorted(d_dict.items()))
     total = len(od)
@@ -81,5 +81,5 @@ def rf_optimize(start_tree, end_tree, file, save=False):
 
 
 # rf_optimize(10000, 10020, "data/bips.txt")
-rf_optimize(100000, 173431, "data/bips.txt")
+rf_optimize(0, 73744, "data/reduced_bips.txt")
 # rf_optimize(0, 3, "data/ind_bips.txt")

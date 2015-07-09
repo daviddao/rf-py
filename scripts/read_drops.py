@@ -1,5 +1,6 @@
 from translate_to_names import *
 
+
 '''
 function returning the n highest scoring dropsets
 '''
@@ -43,4 +44,4 @@ def read_drops(file, name_file, n):
             if count == n:
                 break
 
-read_drops("../data/scoring_100k.txt", "../data/names.txt", 20)
+read_drops("../data/reduced_scoring.txt", "../data/names.txt", 20)
