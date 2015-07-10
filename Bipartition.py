@@ -12,9 +12,9 @@ class Bipartition:
         self.tmp_destroyed = False
         self.matching = False
         # the default representation for all bitarrays is always bitvector[0] = 0
-        self.first = 0
+        # self.first = 0
         # store a deleted mask
-        self.deleted = bitarray | ~bitarray
+        # self.deleted = bitarray | ~bitarray
 
     def set_destroy(self, value):
         self.destroyed = value

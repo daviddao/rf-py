@@ -3,10 +3,12 @@ __author__ = 'David'
 
 class Dropset:
     def __init__(self, dropset, bip):
+        # dropset is just an array containing drops
         self.dropset = dropset
         self.s_bips = [bip]
         # Each Dropset has a score
         self.score = 0
+        self.destroyed = False
 
     # Add a new s_bip into an array containing bipartition objects
     def add_s_bip(self, bip):
@@ -21,7 +23,7 @@ class Dropset:
     def get_score(self):
         return self.score
 
-    def get_indices_per_tree(self, taxa_list):
+    def calculate_indices_per_tree(self, taxa_list):
         indices = {}
         # go through all ids in our dropset
         for global_id in self.dropset:
@@ -34,7 +36,8 @@ class Dropset:
                 else:
                     indices[tree_id] = [global_id]
 
-        return indices
+        # return indices
+        self.indices_per_tree = indices
 
     def calculate_score(self, trees, taxa_list):
 
@@ -43,7 +46,8 @@ class Dropset:
         # negative score calculated by all bips which are destroyed and were matching before
         neg_score = 0
 
-        indices_per_tree = self.get_indices_per_tree(taxa_list)
+        # get the indices from a precalculated stuff
+        indices_per_tree = self.indices_per_tree
 
         # for each tree ...
         for tree_id, indices in indices_per_tree.items():
@@ -51,14 +55,15 @@ class Dropset:
 
             neg_score = neg_score + c_tree.get_penalty(indices)
 
-        for _bips in self.s_bips:
+        for _bip in self.s_bips:
             # _matching = _bips.get_matching()
 
             # is it is going to be destroyed?
-            _destroyed = _bips.get_tmp_destroyed()
-
+            _destroyed = _bip.get_tmp_destroyed()
+            # or is it already destroyed?
+            destroyed = _bip.destroyed
             # if it is not destroyed
-            if not _destroyed:
+            if (not _destroyed) and (not destroyed):
                 # somehow commenting this yields same results as first algorithm in C
                 # if not _matching:
                 pos_score += 1
@@ -70,7 +75,6 @@ class Dropset:
     '''
     Method to check for all s_bips which are merging due to the removal of multi taxon dropsets
     '''
-
     def calculate_full_sbips(self, dropsets):
 
         if len(self.dropset) > 1:
@@ -87,3 +91,37 @@ class Dropset:
                     pass  # no key
         else:
             pass  # elementary dropset
+
+    '''
+    Remove this dropset will cause an earthquake
+    '''
+    def remove(self, trees):
+        # this dropset is destroyed
+        self.destroyed = True
+
+        # set all its s_bips to matching
+        for s_bip in self.get_s_bips():
+            s_bip.set_matching(True)
+
+        # set all temporary changes in tree to real changes
+        for tree_id in self.indices_per_tree:
+            t = trees[tree_id]["Tree"]
+            t.adapt_changes()
+
+        # TODO: check for merging dropsets and delete their taxa
+        # update indices for each dropset
+
+    '''
+    Delete taxon and check if dropset is a duplicate
+    '''
+    def delete_taxa(self, taxa_list, g_indices):
+        drops = self.get_dropset()
+        delete_keys = []
+
+        for key, taxon in enumerate(drops):
+            if taxon in g_indices:
+                delete_keys.append(key)
+
+        # cleanup
+        for key in delete_keys:
+            del drops[key]

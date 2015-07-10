@@ -16,4 +16,4 @@ def reduce_treefile(file, targetfile, n):
     t_file.close()
 
 # ignore 100000 trees
-reduce_treefile("../data/stbase.txt", "../data/reduced_stbase.txt", 100000)
+reduce_treefile("../data/stbase.txt", "../data/reduced_stbase2.txt", 200)

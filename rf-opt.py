@@ -16,25 +16,77 @@ returns:
 
 
 def rf_optimize(start_tree, end_tree, file, save=False):
+    one_iteration = True
+    
     start = time.time()
     # Preprocessing
     d_dict, trees, taxa = calculate_drops(save, start_tree, end_tree, file)
 
-    # We take only positive scores
-    # mx_score = 0
+    # save all trees which should be looked at to enhance performance
+    for key, drops in d_dict.items():
+        drops.calculate_indices_per_tree(taxa)
 
-    f = open("reduced_scoring.txt", "w")
-    # One iteration
     od = collections.OrderedDict(sorted(d_dict.items()))
     total = len(od)
-    count = 0
-    for key, drops in od.items():
-        drops.calculate_full_sbips(d_dict)
-        [drop, score] = drops.calculate_score(trees, taxa)
-        # print(drop, ":", score)
-        count += 1
-        print(count, "/", total)
-        f.write(str(score) + ":" + str(drop) + "\n")
+    iteration = 1
+    f = open("scoring.txt", "w")
+
+    while True:
+
+        # use this to save the current mx_score
+        mx_score = float('-inf')
+        print("Iteration " + str(iteration))
+        f.write("Iteration " + str(iteration) + ":\n")
+
+        # let's test out all dropsets
+        count = 0
+        for key, drops in od.items():
+            # check if its destroyed
+            if not drops.destroyed:
+                drops.calculate_full_sbips(d_dict)
+                [drop, score] = drops.calculate_score(trees, taxa)
+                # print(drop, ":", score)
+                count += 1
+                print(count, "/", total)
+                f.write(str(score) + ":" + str(drop) + "\n")
+
+                # if this score is better than the current best
+                if mx_score < score:
+                    mx_score = score
+                    mx_drops = drops
+
+        # emulate do while loop
+        if(mx_score < 1 or one_iteration):
+            print("end")
+            break
+        else:
+            print("best score: " + str(mx_score))
+
+            mx_drops.calculate_full_sbips(d_dict)
+            # we use this to set back all tmp changes
+            mx_drops.calculate_score(trees, taxa)
+            mx_drops.remove(trees)
+
+            # put the drops here for later checking
+            check_drops = []
+            check_keys = []
+            for taxon_id in mx_drops.get_dropset():
+                # get the global taxon
+                taxon = taxa[taxon_id]
+                for affected_drops in taxon.get_dropset():
+                    affected_drops.delete_taxa(taxa, taxon)
+                    if not (affected_drops in check_drops):
+                        check_keys.append()
+                        check_drops.append(affected_drops)
+
+            for c_drop in check_drops:
+                pass
+
+            # TODO adjust keys and look for duplicates
+
+            total -= 1
+
+        iteration += 1
     f.close()
 
     end = time.time()

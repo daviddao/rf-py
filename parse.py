@@ -113,8 +113,3 @@ def read_bips(file, treeIter=0):
         assert (count == species - 3)
     f.close()
     return trees, l_tree_species, s_trees_count
-
-
-# [trees,count,species] = read_bips("bips.txt")
-
-# print(trees[0]['s_bips'])

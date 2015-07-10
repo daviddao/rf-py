@@ -12,6 +12,7 @@ class Tree:
         # keep track which bits are deleted and which are not
         self.valid_bits = bitarray('1' * self.tips)
         self.first = 0
+        self.tmp_first = 0
         # saves the valid bits for the first check iteration
         self.tmp_delete = self.valid_bits.copy()
 
@@ -56,6 +57,9 @@ class Tree:
             new_first = tmp_delete.index(True)
         else:
             new_first = self.get_first()
+
+        # store it temporary
+        self.tmp_first = new_first
 
         bips_dict = self.get_bips()
 
@@ -110,25 +114,37 @@ class Tree:
         tmp_dict = {}
 
         for key in bips_dict:
-            bip = bips_dict[key]
-            predict_destroyed, new_key = bip.delete_and_check(tmp_delete)
 
-            if predict_destroyed:
-                # then it is predicted to be destroyed
-                bip.tmp_destroyed = True
+            # for all bips which are not destroyed
+            if not bips_dict[key].destroyed:
+                bip = bips_dict[key]
+                predict_destroyed, new_key = bip.delete_and_check(tmp_delete)
 
-                # if it was matching, this causes a penalty
-                if bip.get_matching():
-                    penalty += 1
-
-            # rehash the existing ones and look if they already exist and was matching
-            if not predict_destroyed:
-                # two bips are merging, so lets mark one as destroyed
-                if new_key in tmp_dict:
+                if predict_destroyed:
+                    # then it is predicted to be destroyed
                     bip.tmp_destroyed = True
+
+                    # if it was matching, this causes a penalty
                     if bip.get_matching():
                         penalty += 1
-                else:
-                    tmp_dict[new_key] = bip
+
+                # rehash the existing ones and look if they already exist and was matching
+                if not predict_destroyed:
+                    # two bips are merging, so lets mark one as destroyed
+                    if new_key in tmp_dict:
+                        bip.tmp_destroyed = True
+                        if bip.get_matching():
+                            penalty += 1
+                    else:
+                        tmp_dict[new_key] = bip
 
         return penalty
+
+    def adapt_changes(self):
+        self.valid_bits = self.tmp_delete.copy()
+        self.first = self.tmp_first
+
+        for key, bip in self.bips.items():
+            # if they are destroyed
+            if bip.get_tmp_destroyed():
+                bip.destroyed = bip.get_tmp_destroyed()

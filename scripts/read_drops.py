@@ -27,21 +27,22 @@ def read_drops(file, name_file, n):
     if n > count:
         print("hence, your n is too big!")
     # sort it in reverse order
-    results = sorted(drops.items())[::-1]
-    print("")
+    keys = sorted(drops, key=float)[::-1]
+    results = [(k, drops[k]) for k in keys]
     print("Best ", n, " dropsets (score, dropset):")
     count = 0
     for i in range(n):
         if count == n:
             break
-        for drop in results[i][1]:
+        for d_el in results:
+            drop = d_el[1][0]
             # convert the string back into an array
             drop_converted = [int(el) for el in drop[1:-1].split(",")]
             drop_names = translate_to_names(drop_converted, name_file)
             # print(results[i][0], ": ", drop)
-            print(results[i][0], ": ", drop_names)
+            print(d_el[0], ": ", drop_names)
             count += 1
             if count == n:
                 break
 
-read_drops("../data/reduced_scoring.txt", "../data/names.txt", 20)
+read_drops("../scoring.txt", "../data/names.txt", 20)
