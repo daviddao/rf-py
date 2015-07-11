@@ -15,28 +15,32 @@ returns:
 '''
 
 
-def rf_optimize(start_tree, end_tree, file, save=False):
+def rf_optimize(file, save=False, limit_drops=3):
     one_iteration = True
     
     start = time.time()
     # Preprocessing
-    d_dict, trees, taxa = calculate_drops(save, start_tree, end_tree, file)
+    d_dict, trees, taxa = calculate_drops(save, file, limit_drops)
 
     # save all trees which should be looked at to enhance performance
-    for key, drops in d_dict.items():
-        drops.calculate_indices_per_tree(taxa)
+    count = 0
+
+    # for key, drops in d_dict.items():
+    #     count += 1
+    #     print(count)
+    #     drops.calculate_indices_per_tree(taxa)
 
     od = collections.OrderedDict(sorted(d_dict.items()))
     total = len(od)
     iteration = 1
-    f = open("scoring.txt", "w")
+    f = open("rogue_scoring.txt", "w")
 
     while True:
 
         # use this to save the current mx_score
         mx_score = float('-inf')
         print("Iteration " + str(iteration))
-        f.write("Iteration " + str(iteration) + ":\n")
+        # f.write("Iteration " + str(iteration) + ":\n")
 
         # let's test out all dropsets
         count = 0
@@ -94,5 +98,5 @@ def rf_optimize(start_tree, end_tree, file, save=False):
 
 
 # rf_optimize(10000, 10020, "data/bips.txt")
-rf_optimize(0, 73744, "data/reduced_bips.txt")
-# rf_optimize(0, 3, "data/ind_bips.txt")
+# rf_optimize("data/rogue_bips.txt",)
+rf_optimize("data/reduced_bips.txt")

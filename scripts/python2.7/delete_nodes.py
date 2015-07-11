@@ -38,6 +38,7 @@ delete("../../data/reduced_stbase.txt", "../../data/pruned_stbase.txt", prune)
 
 '''
 
+
 Best  20  dropsets (score, dropset):
 289 :  ['Aegilops_sharonensis']
 287 :  ['Bromus_catharticus', 'Aegilops_sharonensis']

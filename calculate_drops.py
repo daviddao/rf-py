@@ -54,7 +54,7 @@ returns
 '''
 
 
-def calculate_drops(save, start_tree, end_tree, file):
+def calculate_drops(save, file, limit_drops):
     # count all dropsets
     drops_count = 0
     comparisons_count = 0
@@ -63,7 +63,7 @@ def calculate_drops(save, start_tree, end_tree, file):
     save_in_file = save
 
     # Read the bips file from RAxML (second argument: number of trees)
-    [trees, mxtips, n_tree] = read_bips(file, end_tree)
+    [trees, mxtips, n_tree] = read_bips(file)
 
     # Dictionary saving all dropsets
     dropsets_dict = {}
@@ -75,8 +75,8 @@ def calculate_drops(save, start_tree, end_tree, file):
         f = open("drops.txt", "w")
 
     # Iterate through all trees
-    # for i in trees.keys():
-    for i in range(start_tree, end_tree):
+    for i in range(len(trees)):
+        # for i in range(start_tree, end_tree):
         print("calculating dropset for tree", i)
 
         # Extract the bips
@@ -124,39 +124,40 @@ def calculate_drops(save, start_tree, end_tree, file):
                 # print("looking at",count,"/",maxcount)
                 # calculate dropsets and get the indices
                 indices = get_drops(ind_bip, s_bip)
-
-                # raised flag, we deal with a matching bipartition
-                if indices[0] == -1:
-                    s_bip_el.set_matching(True)
+                if len(indices) > limit_drops:
+                    pass
                 else:
-
-                    # get the global representation of the dropset
-                    drop = [s_treeList[i] for i in indices]
-                    # sort the dropset for unique key
-                    drop = sorted(drop)
-                    key = str(drop)
-
-                    # if dropset already exists then get it
-                    if key in dropsets_dict:
-                        drop_e = dropsets_dict[key]
-                        drop_e.add_s_bip(s_bip_el)
-
-                    # otherwise create a new dropset
+                    # raised flag, we deal with a matching bipartition
+                    if indices[0] == -1:
+                        s_bip_el.set_matching(True)
                     else:
-                        drops_count += 1  # one more unique dropset
-                        drop_e = Dropset(drop, s_bip_el)
-                        dropsets_dict[key] = drop_e
+                        # get the global representation of the dropset
+                        drop = [s_treeList[i] for i in indices]
+                        # sort the dropset for unique key
+                        drop = sorted(drop)
+                        key = str(drop)
 
-                    # Store the dropset into taxon for easier searching
-                    for taxon_id in drop:
-                        # Take care not to store duplicates
-                        if drop_e not in taxa_list[taxon_id].get_dropsets():
-                            taxa_list[taxon_id].add_dropset(drop_e)
+                        # if dropset already exists then get it
+                        if key in dropsets_dict:
+                            drop_e = dropsets_dict[key]
+                            drop_e.add_s_bip(s_bip_el)
 
-                if save_in_file:
-                    # save tree index and s_bip, ind_bip index
-                    f.write(str(i) + " " + str(s_id) + " " + str(ind_id) + "\n")
-                    f.write(str(drop) + "\n")
+                        # otherwise create a new dropset
+                        else:
+                            drops_count += 1  # one more unique dropset
+                            drop_e = Dropset(drop, s_bip_el)
+                            dropsets_dict[key] = drop_e
+
+                        # Store the dropset into taxon for easier searching
+                        for taxon_id in drop:
+                            # Take care not to store duplicates
+                            if drop_e not in taxa_list[taxon_id].get_dropsets():
+                                taxa_list[taxon_id].add_dropset(drop_e)
+
+                    if save_in_file:
+                        # save tree index and s_bip, ind_bip index
+                        f.write(str(i) + " " + str(s_id) + " " + str(ind_id) + "\n")
+                        f.write(str(drop) + "\n")
 
     print("Ok, everything is fine")
     if save_in_file:

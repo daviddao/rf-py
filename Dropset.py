@@ -36,8 +36,8 @@ class Dropset:
                 else:
                     indices[tree_id] = [global_id]
 
-        # return indices
-        self.indices_per_tree = indices
+        return indices
+        # self.indices_per_tree = indices
 
     def calculate_score(self, trees, taxa_list):
 
@@ -47,7 +47,9 @@ class Dropset:
         neg_score = 0
 
         # get the indices from a precalculated stuff
-        indices_per_tree = self.indices_per_tree
+        # indices_per_tree = self.indices_per_tree
+        indices_per_tree = self.calculate_indices_per_tree(taxa_list)
+
 
         # for each tree ...
         for tree_id, indices in indices_per_tree.items():
