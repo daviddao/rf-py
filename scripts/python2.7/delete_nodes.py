@@ -19,13 +19,15 @@ def delete(file, target_file, taxa):
             leaves = t.get_leaves_by_name(name=taxon)
             for leaf in leaves:
                 leaf.delete()
+        if len(t) < 3:
+            pass
+        else:
+            # prevent falsy trees for RAxML
+            while len(t.children) == 1:
+                t = t.children[0]
 
-        # prevent falsy trees for RAxML
-        while len(t.children) == 1:
-            t = t.children[0]
-
-        # write it into the file
-        t_file.write(t.write() + "\n")
+            # write it into the file
+            t_file.write(t.write() + "\n")
         count += 1
 
     f.close()
@@ -33,11 +35,38 @@ def delete(file, target_file, taxa):
 
     # TODO: error sorting!
 
-prune = ['Aegilops_sharonensis']
-delete("../../data/reduced_stbase.txt", "../../data/pruned_stbase.txt", prune)
+prune = ['Aegilops_sharonensis', 'Aegilops_speltoides', 'Dasypyrum_villosum']
+delete("../../data/filtered_stbase.txt", "../../data/pruned_filtered_stbase.txt", prune)
 
 '''
 
+
+
+## This is the result for the filtered set (all trees were 1.0 distance)
+
+411 :  ['Picea_rubens', 'Picea_torano', 'Picea_maximowiczii'] 0.988926, 16571
+403 :  ['Picea_rubens', 'Picea_torano'] 0.988953, 16572
+400 :  ['Picea_rubens', 'Picea_alcoquiana', 'Picea_torano'] 0.987561, 16567
+389 :  ['Picea_breweriana', 'Picea_rubens', 'Picea_torano'] 0.989466, 16545
+382 :  ['Picea_rubens', 'Picea_torano', 'Picea_jezoensis'] 0.988573, 16491
+350 :  ['Picea_rubens', 'Picea_torano', 'Picea_mariana'] 0.989335, 16482
+338 :  ['Picea_glehnii', 'Picea_torano'] 0.996386, 16700
+329 :  ['Picea_rubens', 'Picea_koyamae', 'Picea_torano'] 0.989924, 16553
+323 :  ['Picea_glauca', 'Picea_rubens', 'Picea_torano'] 0.989704, 16436
+315 :  ['Aegilops_sharonensis', 'Aegilops_speltoides', 'Dasypyrum_villosum'] 0.987226, 16146
+
+313 :  ['Aegilops_sharonensis', 'Aegilops_uniaristata', 'Dasypyrum_villosum']
+310 :  ['Aegilops_sharonensis', 'Aegilops_speltoides'] 
+308 :  ['Hordeum_marinum', 'Aegilops_sharonensis', 'Aegilops_speltoides']
+303 :  ['Hordeum_marinum', 'Aegilops_sharonensis', 'Aegilops_uniaristata']
+298 :  ['Aegilops_sharonensis', 'Aegilops_uniaristata']
+297 :  ['Aegilops_sharonensis', 'Dasypyrum_villosum']
+294 :  ['Aegilops_sharonensis', 'Aegilops_speltoides', 'Aegilops_juvenalis']
+293 :  ['Hordeum_vulgare', 'Aegilops_sharonensis', 'Aegilops_speltoides']
+292 :  ['Aegilops_sharonensis', 'Aegilops_speltoides', 'Aegilops_umbellulata']
+291 :  ['Secale_cereale', 'Aegilops_sharonensis', 'Dasypyrum_villosum']
+
+## This is the reduced_stbase
 
 Best  20  dropsets (score, dropset):
 289 :  ['Aegilops_sharonensis']

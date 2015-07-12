@@ -16,7 +16,7 @@ def add_rogue(file, target_file, taxa):
         print "looking at tree", count
         line = line.strip().split("=")
         t = Tree(line[1])
-        A = t.add_child(name="r")
+        # A = t.add_child(name="r")
         for taxon in taxa:
             A.add_child(name=taxon)
 
@@ -33,5 +33,5 @@ def add_rogue(file, target_file, taxa):
 
     # TODO: error sorting!
 
-rogue = ['X', 'Y']
-add_rogue("../../data/reduced_stbase.txt", "../../data/rogue_stbase.txt", rogue)
+rogue = ['X']
+add_rogue("../../data/0_stbase.txt", "../../data/rogue_stbase.txt", rogue)

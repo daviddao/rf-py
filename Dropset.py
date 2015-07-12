@@ -58,7 +58,7 @@ class Dropset:
             neg_score = neg_score + c_tree.get_penalty(indices)
 
         for _bip in self.s_bips:
-            # _matching = _bips.get_matching()
+            _matching = _bip.get_matching()
 
             # is it is going to be destroyed?
             _destroyed = _bip.get_tmp_destroyed()
@@ -67,8 +67,8 @@ class Dropset:
             # if it is not destroyed
             if (not _destroyed) and (not destroyed):
                 # somehow commenting this yields same results as first algorithm in C
-                # if not _matching:
-                pos_score += 1
+                if not _matching:
+                    pos_score += 1
 
         score = pos_score - neg_score
 

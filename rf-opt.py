@@ -15,9 +15,8 @@ returns:
 '''
 
 
-def rf_optimize(file, save=False, limit_drops=3):
+def rf_optimize(file, target_file, save=False, limit_drops=3):
     one_iteration = True
-    
     start = time.time()
     # Preprocessing
     d_dict, trees, taxa = calculate_drops(save, file, limit_drops)
@@ -33,7 +32,7 @@ def rf_optimize(file, save=False, limit_drops=3):
     od = collections.OrderedDict(sorted(d_dict.items()))
     total = len(od)
     iteration = 1
-    f = open("rogue_scoring.txt", "w")
+    f = open(target_file, "w")
 
     while True:
 
@@ -98,5 +97,5 @@ def rf_optimize(file, save=False, limit_drops=3):
 
 
 # rf_optimize(10000, 10020, "data/bips.txt")
-# rf_optimize("data/rogue_bips.txt",)
-rf_optimize("data/reduced_bips.txt")
+rf_optimize("data/r_bips.txt", "data/rogue_results.txt")
+# rf_optimize("data/filtered_bips.txt", "data/filtered_results.txt")

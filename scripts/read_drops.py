@@ -45,4 +45,5 @@ def read_drops(file, name_file, n):
             if count == n:
                 break
 
-read_drops("../scoring.txt", "../data/names.txt", 20)
+# read_drops("../data/filtered_results.txt", "../data/names.txt", 20)
+read_drops("../data/rogue_results.txt", "../data/rogue_names.txt", 20)
