@@ -47,9 +47,9 @@ class Dropset:
         neg_score = 0
 
         # get the indices from a precalculated stuff
-        # indices_per_tree = self.indices_per_tree
-        indices_per_tree = self.calculate_indices_per_tree(taxa_list)
+        self.indices_per_tree = self.calculate_indices_per_tree(taxa_list)
 
+        indices_per_tree = self.indices_per_tree
 
         # for each tree ...
         for tree_id, indices in indices_per_tree.items():
@@ -116,14 +116,16 @@ class Dropset:
     '''
     Delete taxon and check if dropset is a duplicate
     '''
-    def delete_taxa(self, taxa_list, g_indices):
+    def delete_taxa(self, delete_index):
         drops = self.get_dropset()
-        delete_keys = []
+        delete_key = -1
 
         for key, taxon in enumerate(drops):
-            if taxon in g_indices:
-                delete_keys.append(key)
+            if taxon == delete_index:
+                delete_key = key
 
-        # cleanup
-        for key in delete_keys:
-            del drops[key]
+        if delete_key >= 0:
+            del drops[delete_key]
+            # print("Key deleted")
+        else: 
+            print("Error, negative key given to delete")

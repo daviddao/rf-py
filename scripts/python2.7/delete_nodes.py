@@ -56,7 +56,7 @@ delete("../../data/filtered_stbase.txt", "../../data/pruned_filtered_stbase.txt"
 315 :  ['Aegilops_sharonensis', 'Aegilops_speltoides', 'Dasypyrum_villosum'] 0.987226, 16146
 
 313 :  ['Aegilops_sharonensis', 'Aegilops_uniaristata', 'Dasypyrum_villosum']
-310 :  ['Aegilops_sharonensis', 'Aegilops_speltoides'] 
+310 :  ['Aegilops_sharonensis', 'Aegilops_speltoides']
 308 :  ['Hordeum_marinum', 'Aegilops_sharonensis', 'Aegilops_speltoides']
 303 :  ['Hordeum_marinum', 'Aegilops_sharonensis', 'Aegilops_uniaristata']
 298 :  ['Aegilops_sharonensis', 'Aegilops_uniaristata']

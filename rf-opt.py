@@ -31,7 +31,7 @@ def rf_optimize(file, target_file, save=False, limit_drops=3):
 
     od = collections.OrderedDict(sorted(d_dict.items()))
     total = len(od)
-    iteration = 1
+    iteration = 0
     f = open(target_file, "w")
 
     while True:
@@ -39,7 +39,7 @@ def rf_optimize(file, target_file, save=False, limit_drops=3):
         # use this to save the current mx_score
         mx_score = float('-inf')
         print("Iteration " + str(iteration))
-        # f.write("Iteration " + str(iteration) + ":\n")
+        f.write("Iteration " + str(iteration) + ":\n")
 
         # let's test out all dropsets
         count = 0
@@ -59,7 +59,7 @@ def rf_optimize(file, target_file, save=False, limit_drops=3):
                     mx_drops = drops
 
         # emulate do while loop
-        if(mx_score < 1 or one_iteration):
+        if(mx_score < 1 or one_iteration or iteration == 9):
             print("end")
             break
         else:
@@ -72,14 +72,12 @@ def rf_optimize(file, target_file, save=False, limit_drops=3):
 
             # put the drops here for later checking
             check_drops = []
-            check_keys = []
             for taxon_id in mx_drops.get_dropset():
                 # get the global taxon
                 taxon = taxa[taxon_id]
-                for affected_drops in taxon.get_dropset():
-                    affected_drops.delete_taxa(taxa, taxon)
+                for affected_drops in taxon.get_dropsets():
+                    affected_drops.delete_taxa(taxon_id)
                     if not (affected_drops in check_drops):
-                        check_keys.append()
                         check_drops.append(affected_drops)
 
             for c_drop in check_drops:
@@ -95,7 +93,7 @@ def rf_optimize(file, target_file, save=False, limit_drops=3):
     end = time.time()
     print("Total time needed:", end - start)
 
-
+# rf_optimize("data/ind_bips.txt", "data/ind_bips_multi.txt")
 # rf_optimize(10000, 10020, "data/bips.txt")
-rf_optimize("data/r_bips.txt", "data/rogue_results.txt")
-# rf_optimize("data/filtered_bips.txt", "data/filtered_results.txt")
+# rf_optimize("data/r_bips.txt", "data/rogue_results.txt")
+rf_optimize("data/filtered_bips.txt", "data/filtered_results_multi.txt")
